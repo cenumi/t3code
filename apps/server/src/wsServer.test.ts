@@ -1791,6 +1791,7 @@ describe("WebSocket Server", () => {
     connections.push(ws);
 
     const response = await sendRequest(ws, WS_METHODS.gitRunStackedAction, {
+      actionId: "client-action-1",
       cwd: "/test",
       action: "commit_push",
     });
@@ -1798,11 +1799,12 @@ describe("WebSocket Server", () => {
     expect(response.error?.message).toContain("detached HEAD");
     expect(runStackedAction).toHaveBeenCalledWith(
       {
+        actionId: "client-action-1",
         cwd: "/test",
         action: "commit_push",
       },
       expect.objectContaining({
-        actionId: expect.any(String),
+        actionId: "client-action-1",
         progressReporter: expect.any(Object),
       }),
     );
@@ -1852,13 +1854,14 @@ describe("WebSocket Server", () => {
     connections.push(initiatingWs, otherWs);
 
     const responsePromise = sendRequest(initiatingWs, WS_METHODS.gitRunStackedAction, {
+      actionId: "client-action-2",
       cwd: "/test",
       action: "commit",
     });
     const progressPush = await waitForPush(initiatingWs, WS_CHANNELS.gitActionProgress);
 
     expect(progressPush.data).toEqual({
-      actionId: expect.any(String),
+      actionId: "client-action-2",
       cwd: "/test",
       action: "commit",
       kind: "phase_started",
