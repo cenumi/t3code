@@ -4,6 +4,13 @@ import { TrimmedNonEmptyString } from "./baseSchemas";
 export const EditorLaunchStyle = Schema.Literals(["direct-path", "goto", "line-column"]);
 export type EditorLaunchStyle = typeof EditorLaunchStyle.Type;
 
+type EditorDefinition = {
+  readonly id: string;
+  readonly label: string;
+  readonly command: string | null;
+  readonly launchStyle: EditorLaunchStyle;
+};
+
 export const EDITORS = [
   { id: "cursor", label: "Cursor", command: "cursor", launchStyle: "goto" },
   { id: "trae", label: "Trae", command: "trae", launchStyle: "goto" },
@@ -19,7 +26,7 @@ export const EDITORS = [
   { id: "antigravity", label: "Antigravity", command: "agy", launchStyle: "goto" },
   { id: "idea", label: "IntelliJ IDEA", command: "idea", launchStyle: "line-column" },
   { id: "file-manager", label: "File Manager", command: null, launchStyle: "direct-path" },
-] as const;
+] as const satisfies ReadonlyArray<EditorDefinition>;
 
 export const EditorId = Schema.Literals(EDITORS.map((e) => e.id));
 export type EditorId = typeof EditorId.Type;
